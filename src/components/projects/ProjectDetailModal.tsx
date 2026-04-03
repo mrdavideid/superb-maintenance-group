@@ -20,17 +20,22 @@ export function ProjectDetailModal({ project, onClose }: ProjectDetailModalProps
 
   const lenis = useLenis()
 
-  // Stop Lenis + lock body scroll when modal is open
+  // Stop Lenis + force native scroll when modal is open
   useEffect(() => {
     if (project) {
       lenis?.stop()
+      // Force native scroll by removing Lenis's html class and overriding body
+      document.documentElement.style.overflow = 'hidden'
       document.body.style.overflow = 'hidden'
+      document.body.style.touchAction = 'none'
     } else {
       lenis?.start()
     }
     return () => {
       lenis?.start()
+      document.documentElement.style.overflow = ''
       document.body.style.overflow = ''
+      document.body.style.touchAction = ''
     }
   }, [project, lenis])
 
@@ -52,8 +57,9 @@ export function ProjectDetailModal({ project, onClose }: ProjectDetailModalProps
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
           className="fixed inset-0 z-[100] overflow-y-auto overscroll-contain"
-          style={{ WebkitOverflowScrolling: 'touch' }}
+          style={{ WebkitOverflowScrolling: 'touch', touchAction: 'pan-y' }}
           onWheel={(e) => e.stopPropagation()}
+          onTouchMove={(e) => e.stopPropagation()}
         >
           {/* Backdrop — click to close */}
           <div className="absolute inset-0 bg-bg-pure/90 backdrop-blur-sm" onClick={onClose} />
