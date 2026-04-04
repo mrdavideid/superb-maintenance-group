@@ -90,20 +90,22 @@ export function ServicesShowcase() {
 
   // Header (shared)
   const Header = () => (
-    <div className="container-wide pt-16 sm:pt-20 lg:pt-28 pb-6 sm:pb-8 flex items-end justify-between">
-      <div>
-        <p className="text-overline mb-4">Our Services</p>
-        <h2 className="font-display text-[clamp(1.75rem,3.5vw,2.75rem)] leading-[1.1] tracking-tight text-text">
-          Complete Property<br />Maintenance Solutions
-        </h2>
+    <div className="container-wide pt-16 sm:pt-20 lg:pt-28 pb-6 sm:pb-8">
+      <div className="flex items-end justify-between gap-8">
+        <div className="max-w-xl">
+          <p className="text-overline mb-4">Our Services</p>
+          <h2 className="font-display text-[clamp(1.75rem,3.5vw,2.75rem)] leading-[1.1] tracking-tight text-text">
+            Complete Property Maintenance Solutions
+          </h2>
+        </div>
+        <Link
+          href="/services"
+          className="hidden sm:inline-flex items-center gap-3 text-gold text-sm font-medium tracking-widest uppercase group flex-shrink-0"
+        >
+          <span>All Services</span>
+          <span className="w-6 h-px bg-gold transition-all duration-300 group-hover:w-10" />
+        </Link>
       </div>
-      <Link
-        href="/services"
-        className="hidden sm:inline-flex items-center gap-3 text-gold text-sm font-medium tracking-widest uppercase group"
-      >
-        <span>All Services</span>
-        <span className="w-6 h-px bg-gold transition-all duration-300 group-hover:w-10" />
-      </Link>
     </div>
   )
 
