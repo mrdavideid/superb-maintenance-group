@@ -12,7 +12,7 @@ interface ProjectDetailModalProps {
 
 export function ProjectDetailModal({ project, onClose }: ProjectDetailModalProps) {
   const [activeImage, setActiveImage] = useState(0)
-  const scrollRef = useRef<HTMLDivElement>(null)
+  const overlayRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     setActiveImage(0)
@@ -20,33 +20,49 @@ export function ProjectDetailModal({ project, onClose }: ProjectDetailModalProps
 
   const lenis = useLenis()
 
-  // Completely disable Lenis and force native scroll when modal opens
   useEffect(() => {
     if (!project) return
 
-    // Destroy Lenis scroll to let browser handle it
-    lenis?.stop()
-
-    // Remove Lenis's smooth scroll class so browser uses native scroll
-    const html = document.documentElement
-    html.classList.add('modal-open')
-    document.body.style.overflow = 'hidden'
-    document.body.style.position = 'fixed'
-    document.body.style.width = '100%'
-    document.body.style.top = `-${window.scrollY}px`
-
     const scrollY = window.scrollY
 
+    // Stop Lenis smooth scroll
+    lenis?.stop()
+
+    // iOS Safari fix: prevent background scroll by making html/body non-scrollable
+    // but DON'T use position:fixed (breaks iOS scroll inside overlay)
+    document.documentElement.style.overflow = 'hidden'
+    document.body.style.overflow = 'hidden'
+    // Prevent iOS bounce/rubber-band on background
+    document.body.style.position = 'relative'
+
     return () => {
+      document.documentElement.style.overflow = ''
       document.body.style.overflow = ''
       document.body.style.position = ''
-      document.body.style.width = ''
-      document.body.style.top = ''
-      html.classList.remove('modal-open')
+      // Restore scroll position
       window.scrollTo(0, scrollY)
       lenis?.start()
     }
   }, [project, lenis])
+
+  // Prevent background scroll on touch while allowing modal scroll
+  useEffect(() => {
+    if (!project || !overlayRef.current) return
+
+    const overlay = overlayRef.current
+
+    const handleTouchMove = (e: TouchEvent) => {
+      // Only allow scroll if the touch is inside the overlay
+      // This prevents the background page from scrolling on iOS
+      const target = e.target as HTMLElement
+      if (!overlay.contains(target)) {
+        e.preventDefault()
+      }
+    }
+
+    document.addEventListener('touchmove', handleTouchMove, { passive: false })
+    return () => document.removeEventListener('touchmove', handleTouchMove)
+  }, [project])
 
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
@@ -65,18 +81,22 @@ export function ProjectDetailModal({ project, onClose }: ProjectDetailModalProps
           exit={{ opacity: 0 }}
           transition={{ duration: 0.3 }}
           className="fixed inset-0 z-[100]"
+          style={{ touchAction: 'none' }}
         >
           {/* Backdrop */}
           <div className="absolute inset-0 bg-bg-pure/90 backdrop-blur-sm" onClick={onClose} />
 
-          {/* Scrollable container — this is what scrolls */}
+          {/* Scrollable overlay — this handles all scrolling */}
           <div
-            ref={scrollRef}
-            className="absolute inset-0 overflow-y-scroll overscroll-contain"
-            style={{ WebkitOverflowScrolling: 'touch' }}
+            ref={overlayRef}
+            className="absolute inset-0 overflow-y-scroll"
+            style={{
+              WebkitOverflowScrolling: 'touch',
+              overscrollBehavior: 'contain',
+              touchAction: 'pan-y',
+            }}
           >
             <div className="min-h-full flex items-start justify-center p-4 sm:p-6 py-8 sm:py-12">
-              {/* Modal card */}
               <motion.div
                 initial={{ opacity: 0, y: 30, scale: 0.97 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -85,7 +105,7 @@ export function ProjectDetailModal({ project, onClose }: ProjectDetailModalProps
                 className="relative z-10 w-full max-w-5xl bg-bg-elevated border border-border"
                 onClick={(e) => e.stopPropagation()}
               >
-                {/* Close button */}
+                {/* Close */}
                 <button
                   onClick={onClose}
                   className="absolute top-4 right-4 z-20 w-11 h-11 flex items-center justify-center text-text-secondary hover:text-text transition-colors bg-bg-pure/60 backdrop-blur-sm"
@@ -96,7 +116,7 @@ export function ProjectDetailModal({ project, onClose }: ProjectDetailModalProps
                   </svg>
                 </button>
 
-                {/* Hero image */}
+                {/* Image */}
                 <div className="bg-bg-surface flex items-center justify-center max-h-[40vh] sm:max-h-[50vh] lg:max-h-[60vh] overflow-hidden">
                   <img
                     src={project.images[activeImage] || project.heroImage}
@@ -107,7 +127,7 @@ export function ProjectDetailModal({ project, onClose }: ProjectDetailModalProps
 
                 {/* Thumbnails */}
                 {project.images.length > 1 && (
-                  <div className="flex gap-2 px-6 py-4 overflow-x-auto">
+                  <div className="flex gap-2 px-6 py-4 overflow-x-auto" style={{ touchAction: 'pan-x' }}>
                     {project.images.map((img, i) => (
                       <button
                         key={i}
@@ -116,12 +136,7 @@ export function ProjectDetailModal({ project, onClose }: ProjectDetailModalProps
                           i === activeImage ? 'border-gold' : 'border-transparent opacity-50 hover:opacity-100'
                         }`}
                       >
-                        <img
-                          src={img}
-                          alt={`${project.title} ${i + 1}`}
-                          className="w-full h-full object-cover"
-                          loading="lazy"
-                        />
+                        <img src={img} alt={`${project.title} ${i + 1}`} className="w-full h-full object-cover" loading="lazy" />
                       </button>
                     ))}
                   </div>
@@ -131,12 +146,8 @@ export function ProjectDetailModal({ project, onClose }: ProjectDetailModalProps
                 <div className="px-6 sm:px-8 py-6 sm:py-8">
                   <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-6">
                     <div>
-                      <span className="text-gold text-xs font-medium tracking-[0.15em] uppercase">
-                        {project.category}
-                      </span>
-                      <h2 className="font-display text-2xl sm:text-3xl text-text mt-2 tracking-tight">
-                        {project.title}
-                      </h2>
+                      <span className="text-gold text-xs font-medium tracking-[0.15em] uppercase">{project.category}</span>
+                      <h2 className="font-display text-2xl sm:text-3xl text-text mt-2 tracking-tight">{project.title}</h2>
                     </div>
                     <div className="flex gap-6">
                       <div>
@@ -152,27 +163,21 @@ export function ProjectDetailModal({ project, onClose }: ProjectDetailModalProps
 
                   <div className="h-px bg-gradient-to-r from-gold/30 via-gold/50 to-gold/30 mb-6" />
 
-                  <p className="text-text-secondary text-base leading-relaxed max-w-2xl">
-                    {project.description}
-                  </p>
+                  <p className="text-text-secondary text-base leading-relaxed max-w-2xl">{project.description}</p>
 
                   {project.services.length > 0 && (
                     <div className="mt-6">
                       <p className="text-text-muted text-xs tracking-[0.12em] uppercase mb-3">Services</p>
                       <div className="flex flex-wrap gap-2">
                         {project.services.map((s) => (
-                          <span key={s} className="text-xs text-gold border border-gold/30 px-3 py-1 tracking-wide">
-                            {s}
-                          </span>
+                          <span key={s} className="text-xs text-gold border border-gold/30 px-3 py-1 tracking-wide">{s}</span>
                         ))}
                       </div>
                     </div>
                   )}
 
                   <div className="mt-8 pt-6 border-t border-border">
-                    <a href="/contact" className="btn-primary btn-shimmer inline-flex">
-                      Enquire About This Project
-                    </a>
+                    <a href="/contact" className="btn-primary btn-shimmer inline-flex">Enquire About This Project</a>
                   </div>
                 </div>
               </motion.div>

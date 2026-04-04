@@ -72,7 +72,7 @@ export function HeroSection() {
             className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
           >
             <div className="w-px h-10 bg-gradient-to-b from-text-secondary/50 to-transparent animate-pulse" />
-            <span className="text-[0.65rem] font-normal tracking-[0.35em] uppercase text-text-muted/40">Scroll</span>
+            <span className="text-[0.7rem] font-normal tracking-[0.3em] uppercase text-text-muted/40">Scroll</span>
           </div>
         </div>
 

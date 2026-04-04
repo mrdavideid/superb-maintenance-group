@@ -113,7 +113,7 @@ export function ServicesShowcase() {
       <section className="bg-bg">
         <Header />
         <div className="container-wide pb-12">
-          <StaggerReveal className="flex flex-col gap-6" stagger={0.1}>
+          <StaggerReveal className="flex flex-col gap-4 sm:gap-6" stagger={0.1}>
             {FEATURED_SERVICES.map((service) => (
               <TapScale key={service.slug}>
                 <Link

@@ -66,13 +66,6 @@ html {
   overflow-x: hidden;
 }
 
-/* Override Lenis smooth scroll when modal is open */
-html.modal-open,
-html.modal-open body,
-html.modal-open .lenis {
-  scroll-behavior: auto !important;
-  overflow: hidden !important;
-}
 
 body {
   font-family: var(--font-body);

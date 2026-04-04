@@ -88,7 +88,7 @@ export function Navigation() {
             <MagneticButton strength={3} className="hidden lg:block">
               <Link
                 href="/contact"
-                className="btn-outline text-[0.75rem] !py-3 !px-7 btn-shimmer"
+                className="btn-outline btn-shimmer"
               >
                 Enquire
               </Link>
