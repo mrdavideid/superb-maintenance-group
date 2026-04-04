@@ -62,7 +62,7 @@ export function ProjectGallery() {
   return (
     <section ref={sectionRef} className="relative bg-bg">
       {/* Header */}
-      <div className="px-6 lg:px-16 pt-16 sm:pt-20 lg:pt-28 pb-8 sm:pb-12">
+      <div className="pl-6 pr-6 sm:pl-8 sm:pr-8 lg:pl-16 lg:pr-16 pt-16 sm:pt-20 lg:pt-28 pb-8 sm:pb-12">
         <div className="flex items-end justify-between gap-8">
           <div>
             <p className="text-overline mb-4">Featured Work</p>
@@ -122,7 +122,7 @@ export function ProjectGallery() {
           <div className="flex-1 overflow-hidden">
             <div
               ref={trackRef}
-              className="flex gap-5 lg:gap-6 h-full items-stretch pl-8 lg:pl-16"
+              className="flex gap-5 lg:gap-6 h-full items-stretch pl-6 sm:pl-8 lg:pl-16"
               style={{ width: `${FEATURED.length * 45 + 10}vw` }}
             >
               {FEATURED.map((project) => (
