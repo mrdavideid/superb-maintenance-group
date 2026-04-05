@@ -45,7 +45,7 @@ export function TestimonialSlider() {
   const row2 = [...row2Reversed, ...row2Reversed]
 
   return (
-    <section className="section-padding bg-bg-elevated/30 relative overflow-hidden">
+    <section className="py-16 lg:py-24 bg-bg-elevated/30 relative overflow-hidden">
       <div className="container-wide mb-10 lg:mb-14">
         <div className="text-center">
           <p className="text-overline mb-4">What Our Clients Say</p>

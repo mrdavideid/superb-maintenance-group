@@ -90,12 +90,12 @@ export function ServicesShowcase() {
 
   // Header (shared)
   const Header = () => (
-    <div className="container-wide pt-16 sm:pt-20 lg:pt-28 pb-6 sm:pb-8">
+    <div className="px-6 lg:px-0 pt-16 sm:pt-20 lg:pt-28 pb-6 sm:pb-8">
       <div className="flex items-end justify-between gap-8">
-        <div className="max-w-xl">
+        <div>
           <p className="text-overline mb-4">Our Services</p>
           <h2 className="font-display text-[clamp(1.75rem,3.5vw,2.75rem)] leading-[1.1] tracking-tight text-text">
-            Complete Property Maintenance Solutions
+            Complete Property<br className="hidden lg:block" /> Maintenance Solutions
           </h2>
         </div>
         <Link

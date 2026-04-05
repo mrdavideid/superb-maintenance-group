@@ -9,7 +9,7 @@ import { SITE } from '@/lib/constants'
 
 export function CTASection() {
   return (
-    <section className="relative py-32 lg:py-44 overflow-hidden">
+    <section className="relative py-20 lg:py-28 overflow-hidden">
       {/* Subtle radial gold glow */}
       <div
         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] pointer-events-none"

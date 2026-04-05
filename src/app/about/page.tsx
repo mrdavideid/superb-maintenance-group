@@ -101,7 +101,7 @@ export default function AboutPage() {
       <GoldLineDraw width="50%" />
 
       {/* Team */}
-      <section className="bg-bg-pure section-padding">
+      <section className="bg-bg-pure pt-16 lg:pt-24 pb-8 lg:pb-12">
         <div className="container-wide">
           <p className="text-overline mb-6">The Team</p>
           <SplitTextReveal
@@ -111,20 +111,18 @@ export default function AboutPage() {
             Built by family. Backed by craft.
           </SplitTextReveal>
 
-          <StaggerReveal className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8" stagger={0.1}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
             {team.map((member) => (
               <div key={member.name} className="group">
-                <ClipReveal direction="up" duration={0.8}>
-                  <div className="img-scale-container mb-6">
-                    <img
-                      src={member.image}
-                      alt={member.name}
-                      loading="lazy"
-                      className="w-full object-cover img-dark"
-                      style={{ aspectRatio: '3/4' }}
-                    />
-                  </div>
-                </ClipReveal>
+                <div className="img-scale-container mb-6">
+                  <img
+                    src={member.image}
+                    alt={member.name}
+                    loading="lazy"
+                    className="w-full object-cover"
+                    style={{ aspectRatio: '3/4' }}
+                  />
+                </div>
                 <h3 className="font-display text-xl text-text">{member.name}</h3>
                 <p className="text-gold text-xs font-medium tracking-[0.12em] uppercase mt-2">{member.role}</p>
                 <div className="h-px bg-gold/20 my-4" />
@@ -138,7 +136,7 @@ export default function AboutPage() {
                 </p>
               </div>
             ))}
-          </StaggerReveal>
+          </div>
         </div>
       </section>
 

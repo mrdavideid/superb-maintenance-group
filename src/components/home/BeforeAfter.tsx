@@ -47,7 +47,7 @@ export function BeforeAfter() {
   const project = PROJECTS[active]
 
   return (
-    <section className="section-padding bg-bg">
+    <section className="py-16 lg:py-24 bg-bg">
       <div className="container-wide">
         {/* Header */}
         <div className="text-center mb-12 lg:mb-16">
